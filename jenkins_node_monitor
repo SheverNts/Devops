@@ -1,0 +1,15 @@
+#!/bin/bash
+
+JenkinsUrl=
+
+rawData=$( curl -L -k http://${JenkinsUrl}/computer/api/json )
+
+for  count in $( seq $( echo $rawData | jq .computer[].displayName | wc -l)) 
+do
+if [[ $(echo $rawData | jq -r .computer[$count].offline) == "true" ]]
+then
+echo "Node Went Down $(echo $rawData | jq .computer[$count].displayName) ..."
+echo "Please check..."
+exit 1
+fi
+done 
